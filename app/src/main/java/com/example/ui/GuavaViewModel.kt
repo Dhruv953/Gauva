@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
 
 class GuavaViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -112,7 +113,7 @@ class GuavaViewModel(application: Application) : AndroidViewModel(application) {
             return
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _isLoading.value = true
             _lastError.value = null
             _connectionStatus.value = "Pinging http://${getActiveBaseUrl()}..."
@@ -127,9 +128,9 @@ class GuavaViewModel(application: Application) : AndroidViewModel(application) {
                 selectedLanguage.value = res.language
                 voiceEnabled.value = res.voiceEnabled
                 notesEnabled.value = res.notesEnabled
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 _connectionStatus.value = "Connection Failed"
-                _lastError.value = e.localizedMessage ?: "unreachable"
+                _lastError.value = e.localizedMessage ?: e.toString()
             } finally {
                 _isLoading.value = false
             }
@@ -151,7 +152,7 @@ class GuavaViewModel(application: Application) : AndroidViewModel(application) {
             return
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _isLoading.value = true
             _lastError.value = null
             try {
@@ -159,8 +160,8 @@ class GuavaViewModel(application: Application) : AndroidViewModel(application) {
                 val res = api.saveWifi(WifiRequest(ssid = ssid, password = pwd))
                 _deviceStatus.value = res
                 _connectionStatus.value = "WiFi Applied"
-            } catch (e: Exception) {
-                _lastError.value = e.localizedMessage ?: "Failed to save WiFi"
+            } catch (e: Throwable) {
+                _lastError.value = e.localizedMessage ?: e.toString()
             } finally {
                 _isLoading.value = false
             }
@@ -178,7 +179,7 @@ class GuavaViewModel(application: Application) : AndroidViewModel(application) {
             return
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _isLoading.value = true
             _lastError.value = null
             try {
@@ -186,8 +187,8 @@ class GuavaViewModel(application: Application) : AndroidViewModel(application) {
                 val res = api.setMode(ModeRequest(mode = modeName))
                 _deviceStatus.value = res
                 _connectionStatus.value = "Guava active mode is $modeName"
-            } catch (e: Exception) {
-                _lastError.value = e.localizedMessage ?: "Failed to set Mode"
+            } catch (e: Throwable) {
+                _lastError.value = e.localizedMessage ?: e.toString()
             } finally {
                 _isLoading.value = false
             }
@@ -218,7 +219,7 @@ class GuavaViewModel(application: Application) : AndroidViewModel(application) {
             return
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _isLoading.value = true
             _lastError.value = null
             try {
@@ -231,8 +232,8 @@ class GuavaViewModel(application: Application) : AndroidViewModel(application) {
                 ))
                 _deviceStatus.value = res
                 _connectionStatus.value = "Settings applied successfully"
-            } catch (e: Exception) {
-                _lastError.value = e.localizedMessage ?: "Failed to save settings"
+            } catch (e: Throwable) {
+                _lastError.value = e.localizedMessage ?: e.toString()
             } finally {
                 _isLoading.value = false
             }
@@ -245,14 +246,14 @@ class GuavaViewModel(application: Application) : AndroidViewModel(application) {
             return
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _isLoading.value = true
             _lastError.value = null
             try {
                 val api = GuavaApiClient.createService(getActiveBaseUrl())
                 api.restartDevice()
                 _connectionStatus.value = "Restart request sent"
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 // Connection drops during restart
                 _connectionStatus.value = "Restart command fired successfully"
             } finally {
