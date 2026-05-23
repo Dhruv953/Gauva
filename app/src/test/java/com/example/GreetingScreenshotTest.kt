@@ -31,7 +31,7 @@ class GreetingScreenshotTest {
 
     composeTestRule.setContent {
       MyApplicationTheme {
-        GuavaSetupApp(viewModel = viewModel)
+        PenguinControlApp(viewModel = viewModel)
       }
     }
 

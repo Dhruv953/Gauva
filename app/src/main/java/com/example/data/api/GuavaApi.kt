@@ -31,11 +31,44 @@ data class StatusResponse(
     val wifiStatus: String = "unknown",
     val deviceIp: String = "unknown",
     val ssid: String = "",
-    val mode: String = "guava",
+    val mode: String = "penguin",
     val language: String = "english",
     val voiceEnabled: Boolean = true,
     val notesEnabled: Boolean = true,
-    val assistantName: String = "Guava"
+    val assistantName: String = "Penguin",
+    val voiceEngine: String = "piper",
+    val listenWhileProcessing: Boolean = true,
+    val queueLimit: Int = 20,
+    val voiceName: String = "Ryan low",
+    val voiceGender: String = "male",
+    val piperModel: String = "",
+    val silenceSeconds: Double = 0.85,
+    val minUtteranceSeconds: Double = 0.35,
+    val maxUtteranceSeconds: Double = 18.0
+)
+
+data class SystemChild(
+    val name: String = "",
+    val path: String = ""
+)
+
+data class SystemFolder(
+    val name: String = "",
+    val path: String = "",
+    val description: String = "",
+    val children: List<SystemChild> = emptyList()
+)
+
+data class SystemModeDetails(
+    val role: String = "",
+    val memory: String = "",
+    val prompt: String = ""
+)
+
+data class SystemOverviewResponse(
+    val root: String = "",
+    val folders: List<SystemFolder> = emptyList(),
+    val modes: Map<String, SystemModeDetails> = emptyMap()
 )
 
 // Retrofit Interface API
@@ -54,6 +87,9 @@ interface GuavaApi {
 
     @POST("api/restart")
     suspend fun restartDevice(): StatusResponse
+
+    @GET("api/system/overview")
+    suspend fun getSystemOverview(): SystemOverviewResponse
 }
 
 // Client Factory

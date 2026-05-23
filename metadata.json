@@ -1,6 +1,6 @@
 {
-  "name": "Guava Setup",
-  "description": "Configure and set up your Guava embedded assistant device easily over Wi-Fi manually or via direct access.",
+  "name": "Penguin Control",
+  "description": "Phone-first control panel for your always-on Raspberry Pi AI assistant system.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
